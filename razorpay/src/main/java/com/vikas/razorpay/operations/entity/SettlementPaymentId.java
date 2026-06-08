@@ -1,0 +1,15 @@
+package com.vikas.razorpay.operations.entity;
+
+
+import jakarta.persistence.Embeddable;
+
+import java.util.UUID;
+
+@Embeddable
+public class SettlementPaymentId {
+
+    private UUID settlementID;
+
+    private UUID paymentId;
+
+}

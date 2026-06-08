@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: razorpay
+  datasource:
+    url: jdbc:postgresql://localhost:5432/razorpayDB
+    username: postgres
+    password: 122003
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
