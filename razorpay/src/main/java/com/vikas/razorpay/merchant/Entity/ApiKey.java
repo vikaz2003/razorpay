@@ -2,6 +2,7 @@ package com.vikas.razorpay.merchant.Entity;
 
 import com.vikas.razorpay.common.enums.Environment;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name="api_key")
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ApiKey {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,6 +28,9 @@ public class ApiKey {
     private String keyId;
     @Column(nullable = false,length=200)
     private String keySecretHash;
+
+    @Column(nullable = false,length=200)
+    private String previousKeySecretHash;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable=false,length=10)

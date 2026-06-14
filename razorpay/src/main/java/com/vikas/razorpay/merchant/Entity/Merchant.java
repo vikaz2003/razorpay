@@ -14,6 +14,7 @@ import java.util.UUID;
 @Table(name="merchant")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Merchant {
 
     @Id
@@ -36,6 +37,7 @@ public class Merchant {
     private String websiteUrl;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private MerchantStatus status=MerchantStatus.PENDING_KYC;
     private String gstId;
     private String panId;
