@@ -1,4 +1,4 @@
-package com.vikas.razorpay.merchant.dto;
+package com.vikas.razorpay.merchant.dto.request;
 
 import com.vikas.razorpay.common.enums.BusinessType;
 import jakarta.validation.constraints.Email;
@@ -15,6 +15,7 @@ public record MerchantSignupRequest(
         @NotNull(message = "Password is required")
         @Size(min=8,message = "Password should be at least 8 characters long")
         String password,
+        @Size(max=50,message = "BusinessName should not be more then 50 characters")
         String businessName,
         BusinessType businessType
 

@@ -1,11 +1,17 @@
 package com.vikas.razorpay.common.exception;
 
 
+import lombok.Getter;
 
-public class ResourceNotFoundException {
+@Getter
+public class ResourceNotFoundException extends RuntimeException{
 
-    public String error;
-    public String message;
 
+    private final String resource;
+
+    public ResourceNotFoundException(String message, String resource) {
+        super(message);
+        this.resource = resource;
+    }
 
 }

@@ -4,9 +4,11 @@ package com.vikas.razorpay.payment.entity;
 import com.vikas.razorpay.common.entity.Money;
 import com.vikas.razorpay.common.enums.OrderStatus;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -14,6 +16,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name="order_record")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OrderRecord {
 
     @Id
@@ -30,6 +37,8 @@ public class OrderRecord {
     @Column(nullable = false,length=20)
     private OrderStatus orderStatus=OrderStatus.CREATED;
 
+    @Column(length=100)
+    private String receipt;
 
     @Column(nullable=false)
     private Integer attempts;

@@ -2,12 +2,18 @@ package com.vikas.razorpay.merchant.Entity;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name="customer")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,4 +1,4 @@
-package com.vikas.razorpay.merchant.dto;
+package com.vikas.razorpay.merchant.dto.response;
 
 import com.vikas.razorpay.common.enums.Environment;
 

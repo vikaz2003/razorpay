@@ -3,9 +3,13 @@ package com.vikas.razorpay.common.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Embeddable
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Money {
 
     private int amountUnits;

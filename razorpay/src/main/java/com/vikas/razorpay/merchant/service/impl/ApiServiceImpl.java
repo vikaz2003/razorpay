@@ -4,8 +4,9 @@ import com.vikas.razorpay.common.exception.ResourceNotFoundException;
 import com.vikas.razorpay.common.util.RandomizerUtil;
 import com.vikas.razorpay.merchant.Entity.ApiKey;
 import com.vikas.razorpay.merchant.Entity.Merchant;
-import com.vikas.razorpay.merchant.dto.ApiKeyCreateResponse;
-import com.vikas.razorpay.merchant.dto.ApiKeyResponse;
+import com.vikas.razorpay.merchant.dto.request.CreateApiKeyRequest;
+import com.vikas.razorpay.merchant.dto.response.ApiKeyCreateResponse;
+import com.vikas.razorpay.merchant.dto.response.ApiKeyResponse;
 import com.vikas.razorpay.merchant.repo.ApiKeyRepository;
 import com.vikas.razorpay.merchant.repo.AppUserRepository;
 import com.vikas.razorpay.merchant.repo.MerchantRepository;
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -31,11 +31,6 @@ public class ApiServiceImpl implements ApiService {
     private final AppUserRepository appUserRepository;
     private final ApiKeyRepository apiKeyRepository;
 
-    @Override
-    public ApiKeyCreateResponse create(UUID merchantId, CreateApiKeyRequest apiKeyRequest) {
-        Merchant merchant=merchantRepository.findById(merchantId)
-                .orElseThrow(() -> new ResourceNotFoundException());
-    }
 
     @Override
     public List<ApiKeyResponse> listByMerchant(UUID merchantId) {
@@ -74,6 +69,22 @@ public class ApiServiceImpl implements ApiService {
 
         key=apiKeyRepository.save(key);
         return new ApiKeyCreateResponse(key.getId(),key.getKeyId(),newRawSecret,key.getEnvironment());
+    }
+
+    @Override
+    public ApiKeyCreateResponse create(UUID merchantId, CreateApiKeyRequest request) {
+         Merchant merchant=merchantRepository.findById(merchantId).orElseThrow(()-> new ResourceNotFoundException("No Resource Found for","merchant"));
+         String keyId="rzp_"+request.getEnvironment().name().toLowerCase()+"bigRandomStuff";
+         String rawSecret="big_random_secret"; // TODO : replace with cryptographic secret
+         ApiKey key=ApiKey.builder()
+                 .merchant(merchant)
+                 .keyId(keyId)
+                 .keySecretHash(rawSecret)
+                 .environment(request.getEnvironment())
+                 .build();
+         ApiKey savedApiKey=apiKeyRepository.save(key);
+         return new ApiKeyCreateResponse(savedApiKey.getId(), savedApiKey.getKeyId(), savedApiKey.getKeySecretHash(), savedApiKey.getEnvironment());
+
     }
 
 

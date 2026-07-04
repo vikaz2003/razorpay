@@ -1,13 +1,15 @@
 package com.vikas.razorpay.merchant.controller;
 
 
-import com.vikas.razorpay.merchant.dto.ApiKeyCreateResponse;
-import com.vikas.razorpay.merchant.dto.ApiKeyResponse;
+import com.vikas.razorpay.merchant.dto.request.CreateApiKeyRequest;
+import com.vikas.razorpay.merchant.dto.response.ApiKeyCreateResponse;
+import com.vikas.razorpay.merchant.dto.response.ApiKeyResponse;
 import com.vikas.razorpay.merchant.service.ApiService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,11 @@ import java.util.UUID;
 public class ApiKeyController {
 
     private final ApiService apiService;
+
+    @PostMapping
+    public  ResponseEntity<ApiKeyCreateResponse> create (@PathVariable UUID merchantId, @Valid @RequestBody CreateApiKeyRequest request){
+           return ResponseEntity.status(HttpStatus.CREATED).body(apiService.create(merchantId,request));
+    }
 
     @GetMapping
     public ResponseEntity<List<ApiKeyResponse>> listByMerchant(UUID merchantId){

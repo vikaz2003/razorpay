@@ -1,4 +1,4 @@
-package com.vikas.razorpay.merchant.dto;
+package com.vikas.razorpay.merchant.dto.response;
 
 import com.vikas.razorpay.common.enums.Environment;
 
@@ -8,7 +8,7 @@ public record ApiKeyCreateResponse(
 
         UUID id,
         String KeyId,
-        String KeySecretHash,
+        String KeySecret,
         Environment environment
 
 ) {
