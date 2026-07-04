@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,24 +35,21 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public List<ApiKeyResponse> listByMerchant(UUID merchantId) {
-        return apiKeyRepository.findByMerchant_Id(merchantId).stream()
-                .map(apiKey-> new ApiKeyResponse(
-                        apiKey.getId(),
-                        apiKey.getKeyId(),
-                        apiKey.getEnvironment(),
-                        apiKey.isEnabled(),
-                        apiKey.getLastUsedAt(),
-                        null
-                )).toList();
+       return apiKeyRepository.findByMerchant_Id(merchantId)
+               .stream()
+               .map(apiKey -> new ApiKeyResponse(apiKey.getId(),
+               apiKey.getKeyId(),apiKey.getEnvironment(), apiKey.isEnabled(),apiKey.getLastUsedAt()))
+               .collect(Collectors.toList());
+
     }
 
     @Override
+    @Transactional
     public void revoke(UUID merchantId, UUID keyId) {
         ApiKey key=apiKeyRepository.findById(keyId)
                 .filter(k -> k.getMerchant().getId().equals(merchantId))
-                .orElseThrow(() -> new ResourceNotFoundException("ApiKey",keyId));
+                .orElseThrow(() -> new ResourceNotFoundException("ApiKey","API KEY"));
         key.setEnabled(false);
-        apiKeyRepository.save(key);
     }
 
     @Override
@@ -72,10 +70,11 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
+    @Transactional
     public ApiKeyCreateResponse create(UUID merchantId, CreateApiKeyRequest request) {
          Merchant merchant=merchantRepository.findById(merchantId).orElseThrow(()-> new ResourceNotFoundException("No Resource Found for","merchant"));
-         String keyId="rzp_"+request.getEnvironment().name().toLowerCase()+"bigRandomStuff";
-         String rawSecret="big_random_secret"; // TODO : replace with cryptographic secret
+         String keyId="rzp_"+request.getEnvironment().name().toLowerCase()+RandomizerUtil.randomBase64(24);
+         String rawSecret=RandomizerUtil.randomBase64(40); // TODO : replace with cryptographic secret
          ApiKey key=ApiKey.builder()
                  .merchant(merchant)
                  .keyId(keyId)

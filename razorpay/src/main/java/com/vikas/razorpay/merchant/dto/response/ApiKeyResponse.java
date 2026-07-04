@@ -8,9 +8,8 @@ import java.util.UUID;
 public record ApiKeyResponse(
         UUID id,
         String keyId,
-        String keySecretHash,
        Environment environment,
-        Boolean Enabled,
+        boolean Enabled,
         LocalDateTime lastUsedAt
 ) {
 

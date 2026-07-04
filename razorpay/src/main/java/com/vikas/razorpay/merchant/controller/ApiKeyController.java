@@ -27,8 +27,8 @@ public class ApiKeyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ApiKeyResponse>> listByMerchant(UUID merchantId){
-        return ResponseEntity.status(201).body(apiService.listByMerchant(merchantId));
+    public ResponseEntity<List<ApiKeyResponse>> listByMerchant(@PathVariable  UUID merchantId){
+        return ResponseEntity.ok(apiService.listByMerchant(merchantId));
     }
 
     @DeleteMapping("/keyId")
@@ -39,7 +39,7 @@ public class ApiKeyController {
 
     @PostMapping("/{keyId}/rotate")
     public ResponseEntity<ApiKeyCreateResponse> rotateKey(@PathVariable UUID merchantId, @PathVariable UUID keyId){
-        return ResponseEntity.status(201).body(apiService.rotate(merchantId,keyId));
+        return ResponseEntity.ok(apiService.rotate(merchantId,keyId));
     }
 
 }
