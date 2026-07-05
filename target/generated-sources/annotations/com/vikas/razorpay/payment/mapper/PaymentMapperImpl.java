@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-05T12:23:11+0530",
+    date = "2026-07-05T16:06:54+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 25.0.1 (Oracle Corporation)"
 )
 @Component
@@ -36,7 +36,6 @@ public class PaymentMapperImpl implements PaymentMapper {
         PaymentStatus status = null;
         PaymentMethod method = null;
         Map<String, Object> methodDetails = null;
-        String bankReference = null;
         String errorCode = null;
         String errorDescription = null;
         LocalDateTime capturedAt = null;
@@ -51,17 +50,14 @@ public class PaymentMapperImpl implements PaymentMapper {
         if ( map != null ) {
             methodDetails = new LinkedHashMap<String, Object>( map );
         }
-        bankReference = payment.getBankReference();
         errorCode = payment.getErrorCode();
         errorDescription = payment.getErrorDescription();
         capturedAt = payment.getCapturedAt();
 
-        String cardLastFour = null;
-        String cardBrand = null;
         Long refundedAmountPaise = null;
         LocalDateTime createdAt = null;
 
-        PaymentResponse paymentResponse = new PaymentResponse( id, orderId, merchantId, amount, status, method, methodDetails, cardLastFour, cardBrand, bankReference, errorCode, errorDescription, refundedAmountPaise, capturedAt, createdAt );
+        PaymentResponse paymentResponse = new PaymentResponse( id, orderId, merchantId, amount, status, method, methodDetails, errorCode, errorDescription, refundedAmountPaise, capturedAt, createdAt );
 
         return paymentResponse;
     }

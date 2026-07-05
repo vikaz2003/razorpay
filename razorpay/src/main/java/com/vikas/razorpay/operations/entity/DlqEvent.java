@@ -1,6 +1,7 @@
 package com.vikas.razorpay.operations.entity;
 
 
+import com.vikas.razorpay.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name="dlq_event")
-public class DlqEvent {
+public class DlqEvent extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

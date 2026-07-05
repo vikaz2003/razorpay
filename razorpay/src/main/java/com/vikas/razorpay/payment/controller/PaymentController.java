@@ -1,0 +1,31 @@
+package com.vikas.razorpay.payment.controller;
+
+
+import com.vikas.razorpay.payment.dto.request.PaymentInItRequestDto;
+import com.vikas.razorpay.payment.dto.response.PaymentResponse;
+import com.vikas.razorpay.payment.service.PaymentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+@RequestMapping("/v1/payments")
+@RestController
+@RequiredArgsConstructor
+public class PaymentController {
+
+    private final PaymentService paymentService;
+    UUID merchantId=UUID.fromString("d7de7437-a115-410f-983e-3b4bd2e16638"); // TODO: replace it with MerchantContext
+
+
+    @PostMapping
+    public ResponseEntity<PaymentResponse> initiate(@Valid @RequestBody PaymentInItRequestDto request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.initiate(merchantId,request));
+    }
+}

@@ -1,10 +1,11 @@
 package com.vikas.razorpay.operations.entity;
 
+import com.vikas.razorpay.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "settlementPayment")
-public class SettlementPayment {
+public class SettlementPayment extends BaseEntity {
 
 
     @EmbeddedId
