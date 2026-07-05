@@ -5,10 +5,8 @@ import com.vikas.razorpay.common.entity.Money;
 import com.vikas.razorpay.common.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -41,7 +39,8 @@ public class OrderRecord {
     private String receipt;
 
     @Column(nullable=false)
-    private Integer attempts;
+    @Builder.Default
+    private Integer attempts = 0;
 
     @JdbcTypeCode((SqlTypes.JSON))
     @Column(columnDefinition = "jsonb")

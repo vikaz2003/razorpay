@@ -16,7 +16,7 @@ public interface ApiService {
 
     void revoke(UUID merchantId, UUID keyId);
 
-    ApiKeyCreateResponse rotate(UUID merchantId, UUID keyId);
+    ApiKeyCreateResponse rotate(UUID merchantId, String keyId);
 
     ApiKeyCreateResponse create(UUID merchantId, @Valid CreateApiKeyRequest request);
 }

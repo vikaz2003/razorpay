@@ -5,6 +5,7 @@ import com.vikas.razorpay.common.entity.Money;
 import com.vikas.razorpay.common.enums.PaymentMethod;
 import com.vikas.razorpay.common.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.cglib.core.Local;
@@ -16,6 +17,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name="payment")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

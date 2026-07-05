@@ -7,6 +7,7 @@ import com.vikas.razorpay.merchant.Entity.Merchant;
 import com.vikas.razorpay.merchant.dto.request.CreateApiKeyRequest;
 import com.vikas.razorpay.merchant.dto.response.ApiKeyCreateResponse;
 import com.vikas.razorpay.merchant.dto.response.ApiKeyResponse;
+import com.vikas.razorpay.merchant.mapper.ApiKeyMapper;
 import com.vikas.razorpay.merchant.repo.ApiKeyRepository;
 import com.vikas.razorpay.merchant.repo.AppUserRepository;
 import com.vikas.razorpay.merchant.repo.MerchantRepository;
@@ -31,7 +32,7 @@ public class ApiServiceImpl implements ApiService {
     private final MerchantRepository merchantRepository;
     private final AppUserRepository appUserRepository;
     private final ApiKeyRepository apiKeyRepository;
-
+    private final ApiKeyMapper apiKeyMapper;
 
     @Override
     public List<ApiKeyResponse> listByMerchant(UUID merchantId) {
@@ -54,10 +55,10 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     @Transactional
-    public ApiKeyCreateResponse rotate(UUID merchantId, UUID keyId) {
-        ApiKey key=apiKeyRepository.findById(keyId)
-                .filter(k -> k.getMerchant().getId().equals(merchantId))
-                .orElseThrow(() -> new ResourceNotFoundException("ApiKey",keyId));
+    public ApiKeyCreateResponse rotate(UUID merchantId, String keyId) {
+        ApiKey key=apiKeyRepository.findByKeyIdAndMerchant_Id(keyId,merchantId
+                )
+                .orElseThrow(() -> new ResourceNotFoundException("ApiKeyNot found with keyId: "+keyId,"ApiKey"));
 
         String newRawSecret= RandomizerUtil.randomBase64(40);
         key.setPreviousKeySecretHash(key.getKeySecretHash());

@@ -8,6 +8,7 @@ import com.vikas.razorpay.merchant.Entity.AppUser;
 import com.vikas.razorpay.merchant.Entity.Merchant;
 import com.vikas.razorpay.merchant.dto.response.MerchantResponse;
 import com.vikas.razorpay.merchant.dto.request.MerchantSignupRequest;
+import com.vikas.razorpay.merchant.mapper.MerchantMapper;
 import com.vikas.razorpay.merchant.repo.AppUserRepository;
 import com.vikas.razorpay.merchant.repo.MerchantRepository;
 import com.vikas.razorpay.merchant.service.AuthService;
@@ -24,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final AppUserRepository appUserRepository;
     private final MerchantRepository merchantRepository;
+    private final MerchantMapper merchantMapper;
 
     @Override
     @Transactional
@@ -32,24 +34,18 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateResourceException("Duplicate Merchant","Merchant Already exists with the email: "+merchantSignupRequest.email());
         }
 
-        Merchant merchant=Merchant.builder()
-                .businessName(merchantSignupRequest.businessName())
-                .businessType(merchantSignupRequest.businessType())
-                .email(merchantSignupRequest.email())
-                .name(merchantSignupRequest.name())
-                .status(MerchantStatus.PENDING_KYC)
-                .build();
-
+        Merchant merchant=merchantMapper.toEntityFromSignUpRequest(merchantSignupRequest);
+        merchant.setStatus(MerchantStatus.PENDING_KYC);
         merchantRepository.save(merchant);
 
         AppUser appUser=AppUser.builder()
                 .email(merchantSignupRequest.email())
                 .merchant(merchant)
-                // TO DO ; encrypt usin gBcrypt
+                // TO DO : encrypt usin gBcrypt
                 .passwordHash(merchantSignupRequest.password())
                 .role(UserRole.OWNER)
                 .build();
         appUserRepository.save(appUser);
-        return new MerchantResponse(merchant.getId(),merchant.getName(),merchant.getEmail(),merchant.getBusinessName(),merchant.getBusinessType(),merchant.getStatus());
+        return merchantMapper.toResponse(merchant);
     }
 }
