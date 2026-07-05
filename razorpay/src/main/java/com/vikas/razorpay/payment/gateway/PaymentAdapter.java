@@ -2,9 +2,10 @@ package com.vikas.razorpay.payment.gateway;
 
 import com.vikas.razorpay.payment.dto.response.PaymentResponse;
 import com.vikas.razorpay.payment.gateway.dto.PaymentRequest;
+import com.vikas.razorpay.payment.gateway.dto.PaymentResult;
 
 public interface PaymentAdapter {
 
-    void initiate(PaymentRequest request);
+    PaymentResult initiate(PaymentRequest request);
 
 }

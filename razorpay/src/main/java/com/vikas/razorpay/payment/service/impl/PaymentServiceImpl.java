@@ -10,6 +10,8 @@ import com.vikas.razorpay.payment.entity.OrderRecord;
 import com.vikas.razorpay.payment.entity.Payment;
 import com.vikas.razorpay.payment.gateway.PaymentGatewayRouter;
 import com.vikas.razorpay.payment.gateway.dto.PaymentRequest;
+import com.vikas.razorpay.payment.gateway.dto.PaymentResult;
+import com.vikas.razorpay.payment.mapper.PaymentMapper;
 import com.vikas.razorpay.payment.repository.OrderRepository;
 import com.vikas.razorpay.payment.repository.PaymentRepository;
 import com.vikas.razorpay.payment.service.PaymentService;
@@ -29,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentGatewayRouter router;
+    private final PaymentMapper paymentMapper;
 
     @Override
     @Transactional
@@ -52,7 +55,18 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         payment= paymentRepository.save(payment);
         PaymentRequest paymentRequest=new PaymentRequest(payment.getId(),request.orderId(),payment.getMerchantId(),payment.getAmount(),request.method(),request.methodDetails());
-        router.initiate(paymentRequest);
-        return null;
+        PaymentResult result=router.initiate(paymentRequest);
+
+
+        if(result instanceof PaymentResult.Pending(String registrationRef)){
+             payment.setProcessorReference(registrationRef);
+        }else if(result instanceof PaymentResult.Failure(String error, String errorDescription)){
+               payment.setStatus(PaymentStatus.FAILED);
+               payment.setErrorCode(error);
+               payment.setErrorDescription(errorDescription);
+        }
+        payment=paymentRepository.save(payment);
+        orderRepository.save(orderRecord);
+        return paymentMapper.toResponse(payment);
     }
 }

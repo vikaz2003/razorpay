@@ -16,4 +16,6 @@ public interface PaymentMapper {
     PaymentResponse toResponse(Payment payment);
 
     List<PaymentResponse> toResponseList(List<Payment> paymentList);
+
+
 }

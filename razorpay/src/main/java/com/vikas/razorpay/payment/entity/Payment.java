@@ -53,6 +53,8 @@ public class Payment extends BaseEntity {
     private Map<String,Object> methodDetails;
     @Column(length = 100)
     private String errorCode;
+    @Column(length=100)
+    private String processorReference;
     @Column(length = 255)
     private String errorDescription;
     private LocalDateTime authorizedAt;
