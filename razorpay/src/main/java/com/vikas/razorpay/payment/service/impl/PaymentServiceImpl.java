@@ -18,8 +18,10 @@ import com.vikas.razorpay.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -34,7 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentMapper paymentMapper;
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public PaymentResponse initiate(UUID merchantId, PaymentInItRequestDto request) {
         OrderRecord orderRecord=orderRepository.findByIdAndMerchantId(request.orderId(),merchantId)
                 .orElseThrow(()-> new ResourceNotFoundException("Order notn found with id: "+request.orderId(),"ORDER_NOT_FOUND"));
@@ -64,9 +66,34 @@ public class PaymentServiceImpl implements PaymentService {
                payment.setStatus(PaymentStatus.FAILED);
                payment.setErrorCode(error);
                payment.setErrorDescription(errorDescription);
+        }else if(result instanceof PaymentResult.Success success){
+               payment.setStatus(PaymentStatus.SETTLED);
+
+
         }
         payment=paymentRepository.save(payment);
         orderRepository.save(orderRecord);
+        return paymentMapper.toResponse(payment);
+    }
+
+    @Override
+    public PaymentResponse capture(UUID merchantId, UUID paymentId) {
+        Payment payment=paymentRepository.findByIdAndMerchantId(paymentId,merchantId)
+                .orElseThrow(()-> new ResourceNotFoundException("Payment Not found for paymentId: "+paymentId,"PAYMENT"));
+        payment.setStatus(PaymentStatus.CAPTURING);
+        PaymentResult result=router.capture(payment.getMethod(),paymentId);
+        if(result instanceof PaymentResult.Success success){
+            log.info("Payment Captured,paymentId :{} ",paymentId);
+            payment.setStatus(PaymentStatus.CAPTURED);
+            payment.setCapturedAt(LocalDateTime.now());
+
+        }else if(result instanceof PaymentResult.Failure(String error, String errorDescription)){
+            log.warn("Payment capture failed,paymentId :{} ",paymentId);
+            payment.setStatus(PaymentStatus.AUTHORIZED);
+            payment.setErrorCode(error);
+            payment.setErrorDescription(errorDescription);
+        }
+        payment=paymentRepository.save(payment);
         return paymentMapper.toResponse(payment);
     }
 }
