@@ -32,7 +32,7 @@ public class BankCallBackSimulator {
     }
 
     private void simulatorConfig(Payment payment){
-        
+
     }
 
 
