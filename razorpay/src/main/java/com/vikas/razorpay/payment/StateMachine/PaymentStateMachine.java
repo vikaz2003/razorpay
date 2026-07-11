@@ -5,7 +5,7 @@ import com.vikas.razorpay.common.enums.PaymentStatus;
 import com.vikas.razorpay.common.exception.InvalidStateTransitionException;
 import org.springframework.stereotype.Component;
 
-;import java.util.Map;
+import java.util.Map;
 
 @Component
 public class PaymentStateMachine {

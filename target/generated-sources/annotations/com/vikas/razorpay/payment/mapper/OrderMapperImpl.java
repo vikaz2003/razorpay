@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-05T16:06:54+0530",
+    date = "2026-07-11T14:24:20+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 25.0.1 (Oracle Corporation)"
 )
 @Component
@@ -32,6 +32,7 @@ public class OrderMapperImpl implements OrderMapper {
         Integer attempts = null;
         Map<String, Object> notes = null;
         LocalDateTime expiresAt = null;
+        LocalDateTime createdAt = null;
 
         id = order.getId();
         merchantId = order.getMerchantId();
@@ -43,9 +44,9 @@ public class OrderMapperImpl implements OrderMapper {
             notes = new LinkedHashMap<String, Object>( map );
         }
         expiresAt = order.getExpiresAt();
+        createdAt = order.getCreatedAt();
 
         OrderStatus status = null;
-        LocalDateTime createdAt = null;
 
         OrderResponse orderResponse = new OrderResponse( id, merchantId, receipt, amount, status, attempts, notes, expiresAt, createdAt );
 

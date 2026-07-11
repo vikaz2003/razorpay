@@ -11,5 +11,5 @@ public interface PaymentAdapter {
     PaymentResult initiate(PaymentRequest request);
 
 
-    PaymentResult capture(UUID paymentId);
+    PaymentResult capture(java.util.UUID paymentId);
 }
