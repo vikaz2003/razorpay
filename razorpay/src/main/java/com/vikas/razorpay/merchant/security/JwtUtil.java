@@ -24,7 +24,7 @@ public class JwtUtil {
 
     }
 
-    private String generateAccessToken(String email, UUID merchantId,String role){
+    public String generateAccessToken(String email, UUID merchantId,String role){
         Instant now=Instant.now();
         return Jwts.builder()
                 .subject(email)
