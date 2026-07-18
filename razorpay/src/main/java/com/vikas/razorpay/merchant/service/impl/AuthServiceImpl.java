@@ -6,6 +6,8 @@ import com.vikas.razorpay.common.enums.UserRole;
 import com.vikas.razorpay.common.exception.DuplicateResourceException;
 import com.vikas.razorpay.merchant.Entity.AppUser;
 import com.vikas.razorpay.merchant.Entity.Merchant;
+import com.vikas.razorpay.merchant.dto.request.LoginRequestDto;
+import com.vikas.razorpay.merchant.dto.response.LoginResponseDto;
 import com.vikas.razorpay.merchant.dto.response.MerchantResponse;
 import com.vikas.razorpay.merchant.dto.request.MerchantSignupRequest;
 import com.vikas.razorpay.merchant.mapper.MerchantMapper;
@@ -41,11 +43,16 @@ public class AuthServiceImpl implements AuthService {
         AppUser appUser=AppUser.builder()
                 .email(merchantSignupRequest.email())
                 .merchant(merchant)
-                // TO DO : encrypt usin gBcrypt
+                // TO DO : encrypt using gBcrypt
                 .passwordHash(merchantSignupRequest.password())
                 .role(UserRole.OWNER)
                 .build();
         appUserRepository.save(appUser);
         return merchantMapper.toResponse(merchant);
+    }
+
+    @Override
+    public LoginResponseDto login(LoginRequestDto requestDto) {
+
     }
 }

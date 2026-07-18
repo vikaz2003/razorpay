@@ -96,4 +96,35 @@ public class PaymentServiceImpl implements PaymentService {
         payment=paymentRepository.save(payment);
         return paymentMapper.toResponse(payment);
     }
+
+    @Override
+    @Transactional
+    public void resolveAuthorization(UUID id, boolean approve, String bankRef, String errorCode, String errorDescription) {
+         Payment payment=paymentRepository.findById(id).orElseThrow(
+                 ()-> new ResourceNotFoundException("Payment not found with id: "+id,"PAYMENT")
+         );
+         if(payment.getStatus()!=PaymentStatus.AUTHORIZING){
+             return;
+         }
+         OrderRecord orderRecord=payment.getOrder();
+         if(approve){
+             payment.setBankReference(bankRef);
+             payment.setAuthorizedAt(LocalDateTime.now());
+
+             //Auto-capture
+             PaymentResult paymentResult=router.capture(payment.getMethod(),id);
+             if(paymentResult instanceof PaymentResult.Success success){
+                 payment.setCapturedAt(LocalDateTime.now());
+                 orderRecord.setOrderStatus(OrderStatus.PAID);
+             }else if(paymentResult instanceof PaymentResult.Failure FAILURE){
+                 payment.setErrorCode(errorCode);
+                 payment.setErrorDescription(errorDescription);
+             }else{
+                 payment.setErrorDescription(errorDescription);
+                 payment.setErrorCode(errorCode);
+             }
+             paymentRepository.save(payment);
+             orderRepository.save(orderRecord);
+         }
+    }
 }

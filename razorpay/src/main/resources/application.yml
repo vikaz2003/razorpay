@@ -8,7 +8,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -29,3 +29,5 @@ payment:
         min-delay-seconds: 4
         max-delay-second: 10
         success-rate: 80
+jwt:
+  secret-key: ebogshnfoieofleofjoseejfoiejofwofwefnsfesf

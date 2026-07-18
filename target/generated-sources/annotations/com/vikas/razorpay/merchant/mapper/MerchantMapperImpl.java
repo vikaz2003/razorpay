@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-11T14:24:20+0530",
+    date = "2026-07-11T22:21:55+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 25.0.1 (Oracle Corporation)"
 )
 @Component
@@ -39,19 +39,19 @@ public class MerchantMapperImpl implements MerchantMapper {
             return null;
         }
 
+        MerchantStatus merchantStatus = null;
         UUID id = null;
         String name = null;
         String email = null;
         String businessName = null;
         BusinessType businessType = null;
 
+        merchantStatus = merchant.getStatus();
         id = merchant.getId();
         name = merchant.getName();
         email = merchant.getEmail();
         businessName = merchant.getBusinessName();
         businessType = merchant.getBusinessType();
-
-        MerchantStatus merchantStatus = null;
 
         MerchantResponse merchantResponse = new MerchantResponse( id, name, email, businessName, businessType, merchantStatus );
 
