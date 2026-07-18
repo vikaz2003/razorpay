@@ -4,8 +4,12 @@ package com.vikas.razorpay.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,8 +22,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handdleNotFound(ResourceNotFoundException ex){
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex){
         String errorCode=ex.getResource().toUpperCase()+"_NOT_FOUND";
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiError.of(ex.getMessage(),errorCode));
     }
+
+
 }
