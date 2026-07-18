@@ -36,6 +36,7 @@ public class MerchantWebhookConfig extends BaseEntity {
     private String webhookSecretHash;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean enabled=true;
 
     @Column(length = 255)

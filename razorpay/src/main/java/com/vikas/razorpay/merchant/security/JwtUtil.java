@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secrret-key}")
+    @Value("${jwt.secret-key}")
     private String secretKey;
 
     private SecretKey getSecretKey(){
@@ -49,7 +49,7 @@ public class JwtUtil {
         return claims.get("role",String.class);
     }
 
-    public UUID extractMerchantId(Claims claims){
-        return claims.get("merchant_id", UUID.class);
+    public String extractMerchantId(Claims claims){
+        return claims.get("merchant_id", String.class);
     }
 }

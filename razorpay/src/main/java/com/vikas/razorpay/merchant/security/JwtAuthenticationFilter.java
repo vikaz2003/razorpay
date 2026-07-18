@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .getSubject(), null,
                         List.of(new SimpleGrantedAuthority("ROLE_" + jwtUtil.extractRole(claims))));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                merchantContext.setMerchantId(jwtUtil.extractMerchantId(claims));
+                merchantContext.setMerchantId(UUID.fromString(jwtUtil.extractMerchantId(claims)));
             }
             filterChain.doFilter(request, response);
         }catch (Exception e){
