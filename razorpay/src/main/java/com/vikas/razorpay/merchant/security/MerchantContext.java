@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 @Getter
 @Setter
-@RequestScope(proxyMode = ScopedProxyMode.INTERFACES)
+@RequestScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MerchantContext {
 
     private UUID merchantId;
