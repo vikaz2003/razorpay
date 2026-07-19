@@ -29,7 +29,7 @@ public class UpiPaymentAdapter implements PaymentAdapter {
         try {
             PaymentProcessorRequest paymentProcessorRequest = PaymentProcessorRequest.nonCard(
                     request.paymentId(),
-                    PaymentMethod.NETBANKING,
+                    PaymentMethod.UPI,
                     request.amount(),
                     request.methodDetails()
             );

@@ -1,6 +1,7 @@
 package com.vikas.razorpay.payment.controller;
 
 
+import com.vikas.razorpay.merchant.security.MerchantContext;
 import com.vikas.razorpay.payment.dto.request.CreateOrderRequest;
 import com.vikas.razorpay.payment.dto.response.OrderResponse;
 import com.vikas.razorpay.payment.service.OrderService;
@@ -19,16 +20,16 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    UUID merchantId=UUID.fromString("d7de7437-a115-410f-983e-3b4bd2e16638"); // TODO: replace it with MerchantContext
+    private final MerchantContext merchantContext;
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(@RequestBody @Valid CreateOrderRequest createOrderRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(merchantId,createOrderRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(merchantContext.getMerchantId(),createOrderRequest));
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getByOrderId(@PathVariable UUID orderId){
-        return ResponseEntity.ok(orderService.getById(merchantId, orderId));
+        return ResponseEntity.ok(orderService.getById(merchantContext.getMerchantId(), orderId));
     }
 
 

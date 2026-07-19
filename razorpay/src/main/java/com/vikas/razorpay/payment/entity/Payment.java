@@ -44,8 +44,6 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentMethod method;
-    @Column(nullable = false)
-    private String idempotencyKey;
     @Column(length = 100)
     private String bankReference;
     @JdbcTypeCode(SqlTypes.JSON)

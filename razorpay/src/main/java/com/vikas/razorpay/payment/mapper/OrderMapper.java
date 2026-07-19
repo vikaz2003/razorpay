@@ -9,5 +9,6 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OrderMapper {
 
+    @Mapping(target = "status",source = "orderStatus")
     OrderResponse toResponse(OrderRecord order);
 }

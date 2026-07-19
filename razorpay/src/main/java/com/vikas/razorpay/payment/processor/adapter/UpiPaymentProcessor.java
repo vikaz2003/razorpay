@@ -17,7 +17,7 @@ public class UpiPaymentProcessor implements PaymentProcessor {
 
         // Call the third party
         String bankCode=request.methodDetails()!=null?
-                request.methodDetails().get("BANK").toString(): VPA_CODE_FAIL;
+                request.methodDetails().get("vpa").toString(): VPA_CODE_FAIL;
 
         if(VPA_CODE_FAIL.equals(bankCode)){
             return new PaymentProcessorResponse.Failure("UPI_REJECTED","UPI rejected the transaction registration");
