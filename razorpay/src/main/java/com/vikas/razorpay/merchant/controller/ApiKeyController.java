@@ -33,9 +33,9 @@ public class ApiKeyController {
         return ResponseEntity.ok(apiService.listByMerchant(merchantContext.getMerchantId()));
     }
 
-    @DeleteMapping("/keyId")
-    public ResponseEntity<Void> revoke(@PathVariable UUID keyId){
-         apiService.revoke(merchantContext.getMerchantId(),keyId);
+    @DeleteMapping("/{keyId}")
+    public ResponseEntity<Void> revoke(@PathVariable String keyId){
+         apiService.revoke(merchantContext.getMerchantId(), keyId);
          return ResponseEntity.noContent().build();
     }
 

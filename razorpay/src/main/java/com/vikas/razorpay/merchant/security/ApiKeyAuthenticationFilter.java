@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -32,20 +33,19 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final ApiKeyRepository apiKeyRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
     private final MerchantContext merchantContext;
     private final HandlerExceptionResolver resolver;
 
     public ApiKeyAuthenticationFilter(
             ApiKeyRepository apiKeyRepository,
             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
-            MerchantContext merchantContext,
-            PasswordEncoder passwordEncoder
+            MerchantContext merchantContext
     ) {
         this.apiKeyRepository=apiKeyRepository;
         this.resolver = resolver;
         this.merchantContext = merchantContext;
-        this.passwordEncoder=passwordEncoder;
+
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
 
            try {
                String header = request.getHeader("Authorization");
-               if (header == null || header.startsWith("Basic ")) {
+               if (header == null || !header.startsWith("Basic ")) {
                    filterChain.doFilter(request, response);
                    return;
                }
@@ -87,7 +87,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         String decoded=new String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8);
         int colon=decoded.indexOf(":");
         if(colon<1) return null;
-        return new String[]{decoded.substring(0,colon),decoded.substring(colon)};
+        return new String[]{decoded.substring(0,colon),decoded.substring(colon+1)};
 
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 public record ApiKeyResponse(
         UUID id,
         String keyId,
-       Environment environment,
+        Environment environment,
         boolean Enabled,
         LocalDateTime lastUsedAt
 ) {

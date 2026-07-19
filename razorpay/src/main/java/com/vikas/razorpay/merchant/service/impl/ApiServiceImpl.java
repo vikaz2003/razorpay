@@ -15,6 +15,7 @@ import com.vikas.razorpay.merchant.service.ApiService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class ApiServiceImpl implements ApiService {
     private final AppUserRepository appUserRepository;
     private final ApiKeyRepository apiKeyRepository;
     private final ApiKeyMapper apiKeyMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<ApiKeyResponse> listByMerchant(UUID merchantId) {
@@ -46,11 +48,12 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     @Transactional
-    public void revoke(UUID merchantId, UUID keyId) {
-        ApiKey key=apiKeyRepository.findById(keyId)
+    public void revoke(UUID merchantId, String keyId) {
+        ApiKey key=apiKeyRepository.findByKeyId(keyId)
                 .filter(k -> k.getMerchant().getId().equals(merchantId))
                 .orElseThrow(() -> new ResourceNotFoundException("ApiKey","API KEY"));
         key.setEnabled(false);
+        apiKeyRepository.save(key);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ApiServiceImpl implements ApiService {
 
         String newRawSecret= RandomizerUtil.randomBase64(40);
         key.setPreviousKeySecretHash(key.getKeySecretHash());
-        key.setKeySecretHash(newRawSecret);
+        key.setKeySecretHash(passwordEncoder.encode(newRawSecret));
         key.setRotatedAt(LocalDateTime.now());
         key.setGracePeriodExpiresAt(LocalDateTime.now().plusHours(24));
 
@@ -79,11 +82,11 @@ public class ApiServiceImpl implements ApiService {
          ApiKey key=ApiKey.builder()
                  .merchant(merchant)
                  .keyId(keyId)
-                 .keySecretHash(rawSecret)
+                 .keySecretHash(passwordEncoder.encode(rawSecret))
                  .environment(request.getEnvironment())
                  .build();
-         ApiKey savedApiKey=apiKeyRepository.save(key);
-         return new ApiKeyCreateResponse(savedApiKey.getId(), savedApiKey.getKeyId(), savedApiKey.getKeySecretHash(), savedApiKey.getEnvironment());
+          ApiKey savedApiKey=apiKeyRepository.save(key);
+          return new ApiKeyCreateResponse(savedApiKey.getId(), savedApiKey.getKeyId(), savedApiKey.getKeySecretHash(), savedApiKey.getEnvironment());
 
     }
 
