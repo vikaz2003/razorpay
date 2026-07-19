@@ -20,6 +20,7 @@ public class WebSecurityConfig {
     private static final String[] JWT_ROUTES={"/v1/auth/**","/v1/merchants/**","/v1/admin/**","/actuator/**"};
     private static final String[]  API_KEY_ROUTES={"/v1/orders/**","/v1/payments/**","/v1/vault/**"};
     private final JwtAuthenticationFilter jwtFilter;
+    private final ApiKeyAuthenticationFilter apiKeyAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain jwtChain(HttpSecurity http){
@@ -32,6 +33,19 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public SecurityFilterChain apiKeyChain(HttpSecurity http){
+        return http
+                .securityMatcher(API_KEY_ROUTES)
+                .csrf(csrf->csrf.disable())
+                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth-> auth
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(apiKeyAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
